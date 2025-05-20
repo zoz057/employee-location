@@ -1,77 +1,49 @@
-
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>نموذج تسجيل الموقع</title>
-    <script>
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById("Latitude").value = position.coords.latitude;
-                    document.getElementById("Longitude").value = position.coords.longitude;
-                }, function(error) {
-                    alert("فشل في تحديد الموقع. تأكد من السماح للموقع في المتصفح.");
-                });
-            } else {
-                alert("المتصفح لا يدعم تحديد الموقع الجغرافي.");
-            }
-        }
-
-        function sendToExcel(event) {
-            event.preventDefault();
-
-            const name = document.getElementById("Name").value;
-            const nationalId = document.getElementById("NationalID").value;
-            const latitude = document.getElementById("Latitude").value;
-            const longitude = document.getElementById("Longitude").value;
-
-            const data = {
-                Name: name,
-                NationalID: nationalId,
-                Latitude: latitude,
-                Longitude: longitude
-            };
-
-            fetch("https://eosrye4qc35n9q2.m.pipedream.net", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert("تم إرسال البيانات بنجاح");
-                    document.getElementById("registrationForm").reset();
-                } else {
-                    alert("حدث خطأ أثناء إرسال البيانات (مرفوض من الخادم)");
-                }
-            })
-            .catch(error => {
-                alert("فشل الاتصال: " + error);
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById("Latitude").value = position.coords.latitude;
+                document.getElementById("Longitude").value = position.coords.longitude;
+            }, function(error) {
+                alert("فشل في تحديد الموقع. تأكد من السماح للموقع في المتصفح.");
             });
+        } else {
+            alert("المتصفح لا يدعم تحديد الموقع الجغرافي.");
         }
-    </script>
-</head>
-<body style="font-family: Arial; background-color: #f4f4f4; max-width: 500px; margin: auto; padding: 50px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align:center; color: #003366;">نموذج تسجيل بيانات الموظف وموقعه</h2>
-    <form id="registrationForm" onsubmit="sendToExcel(event)">
-        <label for="Name">الاسم:</label><br>
-        <input type="text" id="Name" name="Name" required style="width: 100%;"><br><br>
+    }
 
-        <label for="NationalID">رقم الهوية:</label><br>
-        <input type="text" id="NationalID" name="NationalID" required style="width: 100%;"><br><br>
+    function sendToExcel(event) {
+        event.preventDefault();
 
-        <label for="Latitude">خط العرض:</label><br>
-        <input type="text" id="Latitude" name="Latitude" readonly style="width: 100%;"><br><br>
+        const name = document.getElementById("Name").value;
+        const nationalId = document.getElementById("NationalID").value;
+        const latitude = document.getElementById("Latitude").value;
+        const longitude = document.getElementById("Longitude").value;
 
-        <label for="Longitude">خط الطول:</label><br>
-        <input type="text" id="Longitude" name="Longitude" readonly style="width: 100%;"><br><br>
+        const data = {
+            name: name,
+            id: nationalId,
+            latitude: latitude,
+            longitude: longitude
+        };
 
-        <button type="button" onclick="getLocation()" style="background-color: #0057b7; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">📍 اضغط لتحديد الموقع</button>
-        <br><br>
-        <input type="submit" value="إرسال" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-    </form>
-</body>
-</html>
+        fetch("https://script.google.com/macros/s/AKfycbxbjk1Peyy5sD1VdFN8QJsclCCUTo4q9B1bWObgMMvR-B2C8_aS0lr-CywoByXb0FDiEg/exec", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("✅ تم إرسال البيانات بنجاح");
+                document.getElementById("registrationForm").reset();
+            } else {
+                alert("❌ حدث خطأ أثناء الإرسال (مرفوض من الخادم)");
+            }
+        })
+        .catch(error => {
+            alert("⚠️ فشل الاتصال: " + error);
+        });
+    }
+</script>
